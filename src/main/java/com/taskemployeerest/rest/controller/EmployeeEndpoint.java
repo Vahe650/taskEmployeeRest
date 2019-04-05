@@ -1,5 +1,6 @@
 package com.taskemployeerest.rest.controller;
 
+import com.taskemployeerest.rest.model.Degree;
 import com.taskemployeerest.rest.model.Employer;
 import com.taskemployeerest.rest.repository.EmployerRepository;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,11 @@ public class EmployeeEndpoint {
         return employerRepository.findAll();
     }
 
+    @GetMapping("/allByDegree")
+    public Flux<Employer> allNotSeniors() {
+        return employerRepository.findAllByDegreeNotLike(Degree.SENIOR);
+    }
+
     @GetMapping("/getOneEmploYee/{id}")
     public Mono<Employer> one(@PathVariable(name = "id") String id) {
         return employerRepository.findById(id);
@@ -33,7 +39,6 @@ public class EmployeeEndpoint {
         return monoEmployer.flatMap(employer -> employerRepository.save(employer));
     }
 
-
     @PutMapping("/updateEmployee/{id}")
     public Mono<Employer> updateEmployee(@RequestBody Mono<Employer> monoEmployer,
                                          @PathVariable("id") String id) {
@@ -41,6 +46,5 @@ public class EmployeeEndpoint {
             employer.setId(id);
             return employerRepository.save(employer);
         });
-
     }
 }

@@ -1,4 +1,5 @@
 package com.taskemployeerest.rest.controller;
+
 import com.taskemployeerest.rest.model.Task;
 import com.taskemployeerest.rest.model.TaskStatus;
 import com.taskemployeerest.rest.repository.TaskRepository;
@@ -24,7 +25,7 @@ public class TaskEndpoint {
 
     @GetMapping("/tasksByEmAndStat/{employeeId}")
     public Flux<Task> allTaskByEmployerAndStatus(@PathVariable(name = "employeeId") String id) {
-        return taskRepository.findAllByEmployerIdAndStatusNotLike(id,TaskStatus.FINISHED);
+        return taskRepository.findAllByEmployerIdAndStatusNotLike(id, TaskStatus.FINISHED);
     }
 
     @PutMapping("/inProgress/{taskId}")

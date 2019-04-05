@@ -1,6 +1,5 @@
 package com.taskemployeerest.rest.repository;
 
-
 import com.taskemployeerest.rest.model.Task;
 import com.taskemployeerest.rest.model.TaskStatus;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
