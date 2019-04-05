@@ -17,9 +17,14 @@ public class TaskEndpoint {
         return taskRepository.findAll();
     }
 
-    @GetMapping("/allTasks/{employeeId}")
+    @GetMapping("/tasksByEm/{employeeId}")
     public Flux<Task> allTaskByEmployer(@PathVariable(name = "employeeId") String id) {
         return taskRepository.findAllByEmployerId(id);
+    }
+
+    @GetMapping("/tasksByEmAndStat/{employeeId}")
+    public Flux<Task> allTaskByEmployerAndStatus(@PathVariable(name = "employeeId") String id) {
+        return taskRepository.findAllByEmployerIdAndStatusNotLike(id,TaskStatus.FINISHED);
     }
 
     @PutMapping("inProgress/{taskId}")
