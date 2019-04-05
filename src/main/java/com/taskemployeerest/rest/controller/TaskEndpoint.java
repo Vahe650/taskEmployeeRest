@@ -1,64 +1,47 @@
 package com.taskemployeerest.rest.controller;
-
-import com.taskemployeerest.rest.model.Employer;
 import com.taskemployeerest.rest.model.Task;
-import com.taskemployeerest.rest.repository.EmployerRepository;
 import com.taskemployeerest.rest.repository.TaskRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @AllArgsConstructor
 public class TaskEndpoint {
-    private EmployerRepository employerRepository;
     private TaskRepository taskRepository;
 
 
     @GetMapping("/allTasks")
-    public ResponseEntity allTaska() {
-        List<Task> all = taskRepository.findAll();
-        return ResponseEntity.ok(all);
+    public Flux<Task> allTask() {
+        return taskRepository.findAll();
     }
 
     @PostMapping("addTask/{employeeId}")
-    public void addTask(@RequestBody Task task, @PathVariable("employeeId") int id) {
-        Optional<Employer> employerById = employerRepository.findById(id);
-        task.setEmployer(employerById.get());
-        taskRepository.save(task);
+    public Mono<Task> addTask(@RequestBody Mono<Task> taskMono, @PathVariable("employeeId") String id) {
+        return taskMono.flatMap(task -> {
+            task.setEmployerId(id);
+            return taskRepository.save(task);
+        });
     }
 
     @GetMapping("/getOneTask/{id}")
-    public ResponseEntity one(@PathVariable(name = "id") int id) {
-        Optional<Task> one = taskRepository.findById(id);
-        return one.<ResponseEntity>map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().body("taask with " + id + " id is not present"));
+    public Mono<Task> one(@PathVariable(name = "id") String id) {
+        return taskRepository.findById(id);
     }
 
 
-    @DeleteMapping("/deleteTask{id}")
-    public ResponseEntity delete(@PathVariable(name = "id") int id) {
-        Optional<Task> one = taskRepository.findById(id);
-        if (one.isPresent()) {
-            taskRepository.delete(one.get());
-            return ResponseEntity.ok(one.get().getTitle() + " is deleted");
-        }
-        return ResponseEntity.badRequest().body("empolyee with " + id + " id is not present");
+    @DeleteMapping("/deleteTask/{id}")
+    public Mono<Void> deleteTask(@PathVariable(name = "id") String id) {
+        return taskRepository.deleteById(id);
     }
 
 
-    @PutMapping("/update/{taskID}")
-    public ResponseEntity update(@PathVariable("taskID") int id,@RequestBody Task task){
-        Optional<Task> byId = taskRepository.findById(id);
-        if (!byId.isPresent()) {
-            return ResponseEntity.badRequest().body("task with " + id + " id is not present");
-        }
-        task.setId(id);
-        taskRepository.save(task);
-        return ResponseEntity.ok(task);
-
+    @PutMapping("/updateTask/{id}")
+    public Mono<Task> updateTask(@RequestBody Mono<Task> taskMono, @PathVariable(name = "id") String id) {
+        return taskMono.flatMap(task -> {
+            task.setId(id);
+            return taskRepository.save(task);
+        });
     }
 }

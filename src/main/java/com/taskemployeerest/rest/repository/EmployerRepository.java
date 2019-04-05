@@ -1,10 +1,11 @@
 package com.taskemployeerest.rest.repository;
 
 
-
 import com.taskemployeerest.rest.model.Employer;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface EmployerRepository extends JpaRepository<Employer,Integer> {
+@Repository
+public interface EmployerRepository extends ReactiveMongoRepository<Employer,String> {
 
 }

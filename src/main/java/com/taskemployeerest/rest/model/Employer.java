@@ -1,30 +1,23 @@
 package com.taskemployeerest.rest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "employer")
+@Document(collection = "employer")
 public class Employer {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private int id;
-    @Column
+    private String id;
     private String name;
-    @Column
     private String surname;
-    @Column
-    @Enumerated(EnumType.STRING)
     private Degree degree;
-    @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL)
-    private List<Task> tasks;
+
+
 }
