@@ -31,7 +31,6 @@ public class EmployeeEndpoint {
     @PostMapping("/saveEmployee")
     public Mono<Employer> saveEmployee(@RequestBody Mono<Employer> monoEmployer) {
         return monoEmployer.flatMap(employer -> employerRepository.save(employer));
-
     }
 
 

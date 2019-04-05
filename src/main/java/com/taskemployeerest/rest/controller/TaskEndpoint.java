@@ -27,7 +27,7 @@ public class TaskEndpoint {
         return taskRepository.findAllByEmployerIdAndStatusNotLike(id,TaskStatus.FINISHED);
     }
 
-    @PutMapping("inProgress/{taskId}")
+    @PutMapping("/inProgress/{taskId}")
     public Mono<Task> inprogresTask(@RequestBody Mono<Task> taskMono,
                                     @PathVariable(name = "taskId") String id) {
         return taskMono.flatMap(task -> {
